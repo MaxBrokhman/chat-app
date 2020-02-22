@@ -11,24 +11,29 @@ const publicDir = path.join(__dirname, '../public')
 
 const getGoogleMapsCoords = (lat, long) => `https://google.com/maps?q=${lat},${long}`
 
+const messageHandler = (message) => ({
+  message,
+  time: new Date().getTime(),
+})
+
 app.use(express.static(publicDir))
 
 io.on('connection', (socket) => {
   console.log('Connected!')
 
-  socket.broadcast.emit('message', 'New user has joined!')
+  socket.broadcast.emit('message', messageHandler('New user has joined!'))
 
   socket.on('sendMessage', (message) => {
-    socket.emit('message', message)
+    socket.emit('message', messageHandler(message))
     console.log('new message received ', message)
   })
 
   socket.on('disconnect', () => {
-    io.emit('message', 'User has been disconnected')
+    io.emit('message', messageHandler('User has been disconnected'))
   })
 
   socket.on('shareLocation', ({ lat, long }, acknowledgementCallback) => {
-    io.emit('message', getGoogleMapsCoords(lat, long))
+    io.emit('locationMessage', messageHandler(getGoogleMapsCoords(lat, long)))
     acknowledgementCallback('Location shared!')
   })
 })
