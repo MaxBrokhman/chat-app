@@ -6,28 +6,30 @@
     <title>Chat App</title>
   </head>
   <body>
-    <section class="app-container">
-      <h1 class="visually-hidden">Chat Application</h1>
-      <section class="chat-side-bar">
-        <h2 class="visually-hidden">Side Bar</h2>
-      </section>
-      <section class="chat-main">
-        <h2 class="visually-hidden">Messages</h2>
-        <div class="messages-container">
-          
-        </div>
-        <div class="message-form-container">
-          <form class="message-form">
-            <input class="message-input" type="text" placeholder="New message">
-            <button class="message-form-btn">Send</button>
-          </form>
-          <button class="location-btn">Send my location</button>
-        </div>
+    <section class="join-container">
+      <h1 class="visually-hidden">Join The Chat</h1>
+      <section class="join-form__container">
+        <h2 class="visually-hidden">Join Chat Form</h2>
+        <form action="/chat.html">
+          <label for="username" class="join-form__label">Display name</label>
+          <input 
+            type="text" 
+            name="username" 
+            placeholder="Display name" 
+            class="join-form__input chat-input"
+            required
+          >
+          <label for="roomname" class="join-form__label">Room</label>
+          <input 
+            type="text" 
+            name="roomname" 
+            placeholder="Room" 
+            class="join-form__input chat-input"
+            required
+          >
+          <button class="join-form__btn chat-btn">Join</button>
+        </form>
       </section>
     </section>
-      
-      
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/chat.js"></script>
   </body>
 </html>

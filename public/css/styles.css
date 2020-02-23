@@ -50,8 +50,25 @@ body {
   margin-bottom: 16px;
 }
 
-.location-btn:hover {
+.chat-btn {
+  cursor: pointer;
+  padding: 12px;
+  background: #7C5CBF;
+  border: none;
+  color: white;
+  font-size: 14px;
+  transition: background .3s ease;
+}
+
+.chat-btn:hover {
   background: #6b47b8;
+}
+
+.chat-input {
+  font-size: 14px;
+  outline: none;
+  padding: 12px;
+  border: 1px solid #eeeeee;
 }
 
 .message-form-container {
@@ -68,23 +85,9 @@ body {
 }
 
 .message-input {
-  font-size: 14px;
-  border: 1px solid #eeeeee;
-  outline: none;
   width: 100%;
-  padding: 12px;
   margin: 0 16px 0 0;
   flex-grow: 1;
-}
-
-.location-btn, .message-form-btn {
-  cursor: pointer;
-  padding: 12px;
-  background: #7C5CBF;
-  border: none;
-  color: white;
-  font-size: 14px;
-  transition: background .3s ease;
 }
 
 .message__user-name {
@@ -100,4 +103,36 @@ body {
 
 .location-message__link {
   color: #0070CC;
+}
+
+.join-container {
+  background: #333744;
+  width: 100vw;
+  height: 100vh;   
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.join-form__container {
+  box-shadow: 0px 0px 17px 1px #1D1F26;
+  background: #F7F7FA;
+  padding: 24px;
+  width: 250px;
+}
+
+.join-form__input {
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.join-form__btn {
+  width: 100%;
+}
+
+.join-form__label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #777;
 }
