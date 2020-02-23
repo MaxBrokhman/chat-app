@@ -13,7 +13,15 @@ const getDate = (time) => new Date(time).toLocaleDateString()
 const getTime = (time) => new Date(time).toLocaleTimeString()
 const getLocalTime = (time) => `${getDate(time)} ${getTime(time)}`
 const getMessageWithTime = ({ message, time }) => `${getLocalTime(time)} - ${message || ''}`
+
+const searchQuery = location.search
+
 const locationMessage = `My current location`
+let userName
+socket.emit('join', searchQuery, (user) => {
+  console.log(user)
+  userName = user
+})
 
 const dummyUser = 'Dummy User'
 
@@ -28,7 +36,7 @@ const createMessage = ({ message, time }) => {
   userNameStr.classList.add(userSpanClassName)
   messageBody.textContent = message
   timeStr.textContent = getLocalTime(time)
-  userNameStr.textContent = dummyUser
+  userNameStr.textContent = userName || ''
   timeBody.appendChild(userNameStr)
   timeBody.appendChild(timeStr)
   container.appendChild(timeBody)
@@ -46,7 +54,7 @@ const createLocationMessage = ({ message, time }) => {
   const userNameStr = document.createElement('span')
   userNameStr.classList.add(userSpanClassName)
   timeStr.textContent = getLocalTime(time)
-  userNameStr.textContent = dummyUser
+  userNameStr.textContent = userName || ''
   timeBody.appendChild(userNameStr)
   timeBody.appendChild(timeStr)
   const locationLink = document.createElement('a')
@@ -70,15 +78,6 @@ messageForm.addEventListener('submit', (evt) => {
   messageInput.focus()
 })
 
-socket.on('message', (res) => {
-  console.log('Message received on client side ', res.message)
-  addMessage(createMessage(res))
-})
-
-socket.on('locationMessage', (message) => {
-  addMessage(createLocationMessage(message))
-})
-
 locationBtn.addEventListener('click', () => {
   navigator.geolocation.getCurrentPosition(({ coords }) => {
     socket.emit('shareLocation', {
@@ -90,3 +89,9 @@ locationBtn.addEventListener('click', () => {
     })
   })
 })
+
+socket.on('message', (res) => {
+  console.log('Message received on client side ', res.message)
+  addMessage(createMessage(res))
+})
+

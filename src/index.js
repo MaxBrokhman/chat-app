@@ -16,12 +16,36 @@ const messageHandler = (message) => ({
   time: new Date().getTime(),
 })
 
+const parseKeyStr = (str) => str.replace(/[\?&]/, '')
+const breakQueryStr = (str) => str.split('=')
+
+const queryStr = /[\?&]\w*=(\w*\+?\w*)*/gi
+
 app.use(express.static(publicDir))
 
 io.on('connection', (socket) => {
-  console.log('Connected!')
 
-  socket.broadcast.emit('message', messageHandler('New user has joined!'))
+  socket.on('join', (search, acknowledgementCallback) => {
+    
+    const matches = search.match(queryStr)
+    const searchOptions = {}
+    matches.reduce((acc, str) => {
+      const parsedStr = parseKeyStr(str)
+      const strArr = breakQueryStr(parsedStr)
+      const [key, value] = strArr
+      acc[key] = value
+      return acc
+    }, searchOptions)
+
+    const { roomname, username } = searchOptions
+    socket.join(roomname)
+    socket.emit('message', messageHandler('Welcome to the chat!'))
+
+    socket.broadcast.to(roomname).emit('message', messageHandler(`${username} has joined!`))
+    acknowledgementCallback(username)
+  })
+
+  
 
   socket.on('sendMessage', (message) => {
     socket.emit('message', messageHandler(message))
