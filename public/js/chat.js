@@ -17,15 +17,20 @@ const getMessageWithTime = ({ message, time }) => `${getLocalTime(time)} - ${mes
 const searchQuery = location.search
 
 const locationMessage = `My current location`
-let userName
-socket.emit('join', searchQuery, (user) => {
-  console.log(user)
-  userName = user
+
+socket.emit('join', searchQuery, ({ error, user }) => {
+  if(error) {
+    alert(error)
+    location.href = '/'
+    return error
+  }
 })
 
-const dummyUser = 'Dummy User'
-
-const createMessage = ({ message, time }) => {
+const createMessage = ({ 
+  message, 
+  time, 
+  user, 
+}) => {
   const container = document.createElement('div')
   container.classList.add(messageClassName)
   const messageBody = document.createElement('p')
@@ -36,7 +41,7 @@ const createMessage = ({ message, time }) => {
   userNameStr.classList.add(userSpanClassName)
   messageBody.textContent = message
   timeStr.textContent = getLocalTime(time)
-  userNameStr.textContent = userName || ''
+  userNameStr.textContent = user || ''
   timeBody.appendChild(userNameStr)
   timeBody.appendChild(timeStr)
   container.appendChild(timeBody)
@@ -44,7 +49,11 @@ const createMessage = ({ message, time }) => {
   return container
 }
 
-const createLocationMessage = ({ message, time }) => {
+const createLocationMessage = ({ 
+  message, 
+  time, 
+  user, 
+}) => {
   const container = document.createElement('div')
   container.classList.add(messageClassName, locationMessageClassName)
   const messageBody = document.createElement('p')
@@ -54,7 +63,7 @@ const createLocationMessage = ({ message, time }) => {
   const userNameStr = document.createElement('span')
   userNameStr.classList.add(userSpanClassName)
   timeStr.textContent = getLocalTime(time)
-  userNameStr.textContent = userName || ''
+  userNameStr.textContent = user || ''
   timeBody.appendChild(userNameStr)
   timeBody.appendChild(timeStr)
   const locationLink = document.createElement('a')
