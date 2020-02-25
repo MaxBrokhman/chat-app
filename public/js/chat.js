@@ -19,6 +19,19 @@ const searchQuery = location.search
 
 const locationMessage = `My current location`
 
+const autoScroll = () => {
+  const newMessage = messagesContainer.lastElementChild
+  const newMessageStyles = getComputedStyle(newMessage)
+  const newMessageMargin = parseInt(newMessageStyles.marginBottom)
+  const newMessageHeight = newMessage.offsetHeight + newMessageMargin
+
+  const scrollOffset = messagesContainer.offsetHeight + messagesContainer.scrollTop
+  const messagesContainerHeight = messagesContainer.scrollHeight
+  if(messagesContainerHeight - newMessageHeight <= scrollOffset){
+    messagesContainer.scrollTop = messagesContainer.scrollHeight
+  }
+}
+
 socket.emit('join', searchQuery, ({ error, user }) => {
   if(error) {
     alert(error)
@@ -124,6 +137,12 @@ locationBtn.addEventListener('click', () => {
 
 socket.on('message', (res) => {
   addMessage(createMessage(res))
+  autoScroll()
+})
+
+socket.on('locationMessage', (res) => {
+  addMessage(createLocationMessage(res))
+  autoScroll()
 })
 
 socket.on('roomData', ({ room, users }) => {
