@@ -58,7 +58,10 @@ io.on('connection', (socket) => {
     socket.join(user.room)
     socket.emit('message', messageHandler('Welcome to the chat!', ADMIN))
     socket.broadcast.to(user.room).emit('message', messageHandler(`${user.username} has joined!`, ADMIN))
-
+    io.to(user.room).emit('roomData', {
+      room: user.room,
+      users: getUsersInRoom(user.room)
+    })
     acknowledgementCallback({ user: username })
   })
 
@@ -70,7 +73,13 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     const user = removeUser(socket.id)
-    user && io.to(user.room).emit('message', messageHandler(`${user.username} has been disconnected`, ADMIN))
+    if(user) {
+      io.to(user.room).emit('message', messageHandler(`${user.username} has been disconnected`, ADMIN))
+      io.to(user.room).emit('roomData', {
+        room: user.room,
+        users: getUsersInRoom(user.room)
+      })
+    }
   })
 
   socket.on('shareLocation', ({ lat, long }, acknowledgementCallback) => {

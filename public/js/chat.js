@@ -4,6 +4,7 @@ const messageForm = document.querySelector('.message-form')
 const messageInput = document.querySelector('.message-input')
 const locationBtn = document.querySelector('.location-btn')
 const messagesContainer = document.querySelector('.messages-container')
+const sideBar = document.querySelector('.chat-side-bar')
 const messageClassName = 'chat-message'
 const locationMessageClassName = 'location-message'
 const userSpanClassName = 'message__user-name'
@@ -78,6 +79,28 @@ const createLocationMessage = ({
   return container
 }
 
+const createRoomList = (room, users) => {
+  const container = document.createDocumentFragment()
+  const header = document.createElement('h2')
+  header.textContent = room
+  header.classList.add('room-header')
+  container.appendChild(header)
+  const usersHeader = document.createElement('h3')
+  usersHeader.classList.add('users-list-title')
+  usersHeader.textContent = 'Users'
+  container.appendChild(usersHeader)
+  const usersList = document.createElement('ul')
+  usersList.classList.add('users-list')
+  users.forEach(user => {
+    const listItem = document.createElement('li')
+    listItem.classList.add('users-list-item')
+    listItem.textContent = user.username
+    usersList.appendChild(listItem)
+  })
+  container.appendChild(usersList)
+  return container
+}
+
 const addMessage = (elm) => messagesContainer.appendChild(elm)
 
 messageForm.addEventListener('submit', (evt) => {
@@ -100,7 +123,12 @@ locationBtn.addEventListener('click', () => {
 })
 
 socket.on('message', (res) => {
-  console.log('Message received on client side ', res.message)
   addMessage(createMessage(res))
 })
 
+socket.on('roomData', ({ room, users }) => {
+  while(sideBar.children.length){
+    sideBar.firstElementChild.remove()
+  }
+  sideBar.appendChild(createRoomList(room, users))
+})

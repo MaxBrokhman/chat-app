@@ -41,7 +41,9 @@ const removeUser = (id) => {
 
 const getUser = (id) => users.get(id)
 
-const getUsersInRoom = (roomName) => users.values().filter(user => user.room === roomName)
+const getUsersInRoom = (roomName) => Array.from(
+  users.values()
+).filter(user => user.room === roomName)
 
 module.exports = {
   addUser,
