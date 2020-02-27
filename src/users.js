@@ -1,3 +1,8 @@
+const {
+  EMPTY_USERNAME_ERROR_MESSAGE,
+  DUPLICATE_USERNAME_ERROR_MESSAGE,
+} = require('./config')
+
 const users = new Map()
 
 const normalizeString = (str) => str.trim().toLowerCase()
@@ -12,13 +17,13 @@ const addUser = ({
   const isInfoValid = Boolean(name) && Boolean(roomName)
   if(!isInfoValid) {
     return { 
-      error: 'Username and room are required!' 
+      error: EMPTY_USERNAME_ERROR_MESSAGE
     }
   }
   for(let [key, value] of users){
     if(value.username === name && value.room === roomName){
       return {
-        error: 'Username is already taken!'
+        error: DUPLICATE_USERNAME_ERROR_MESSAGE
       }
     }
   }
